@@ -1,0 +1,12 @@
+[package]
+name = "goto-ally"
+version = "0.1.0"
+authors = ["Matt Coffin <mcoffin13@gmail.com>"]
+license = "GPL-3.0+"
+description = """
+Lightweight configurable bash location alias manager.
+"""
+
+[dependencies]
+getopts = "^0.2"
+yaml-rust = "^0.2"
