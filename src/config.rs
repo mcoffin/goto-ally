@@ -48,7 +48,6 @@ impl Config {
         match fs::File::open(&cfg_path) {
             Ok(mut f) => {
                 use std::io::Read;
-                use std::iter;
                 use yaml::yaml::Yaml;
                 use yaml::YamlLoader;
 
@@ -93,9 +92,7 @@ impl Config {
                     _ => panic!("This is a bug. Please report it. Code: 1"),
                 }).collect();
 
-                for t in cfg_yml.into_iter() {
-                    self.aliases.extend(iter::once(t));
-                }
+                self.aliases.extend(cfg_yml.into_iter());
             },
             _ => {},
         }
