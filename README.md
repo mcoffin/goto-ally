@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/mcoffin/goto-ally.png?label=ready&title=Ready)](https://waffle.io/mcoffin/goto-ally)
 # goto-ally
 [![Build Status](https://travis-ci.org/mcoffin/goto-ally.svg?branch=master)](https://travis-ci.org/mcoffin/goto-ally)
 
