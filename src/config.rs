@@ -26,15 +26,16 @@ impl Config {
             path
         };
 
-        cfg.apply_config_file(env::home_dir().unwrap().join(CONFIG_FILENAME));
         loop {
             let cfg_path = path.join(CONFIG_FILENAME);
             cfg.apply_config_file(&cfg_path);
             path = match path.parent() {
                 Some(p) => p,
-                None => return cfg,
+                None => break,
             };
         }
+        cfg.apply_config_file(env::home_dir().unwrap().join(CONFIG_FILENAME));
+        cfg
     }
 
     fn apply_config_file<P>(&mut self, cfg_path: P)
