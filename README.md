@@ -1,4 +1,6 @@
 # goto-ally
+[![Build Status](https://travis-ci.org/mcoffin/goto-ally.svg?branch=master)](https://travis-ci.org/mcoffin/goto-ally)
+
 Goto ally is a program that helps to maintain a list of directories that you commonly hop to
 
 ## Installation
