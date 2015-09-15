@@ -46,6 +46,14 @@ Unfortunately, the user works on the `foo` project quite a bit, and wants to be 
 
 ```yaml
 bar: ./bar
-baz: baz
+baz: Some/Dumb/SubDirectoryChain/baz
 root: './'
 ```
+
+With the above configuration, the user can also, from anywhere on the system, jump **directly** to a sub-component of the `foo` project by using *path jumping*. A path-jumping command would look like the following:
+
+```bash
+$ goto foo/baz
+```
+
+This will take the user to `/home/user/foo/Some/Dumb/SubDirectoryChain/baz`. This is most useful for managing paths that need to skip down deep directory trees.
