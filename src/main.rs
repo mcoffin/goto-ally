@@ -10,6 +10,27 @@ fn options() -> Options {
     opts
 }
 
+fn goto_target<S: AsRef<str>>(tgt: S) {
+    use std::env;
+
+    let tgt = tgt.as_ref();
+
+    let cfg = config::Config::new(env::current_dir().unwrap());
+
+    match env::set_current_dir(&cfg.aliases[tgt]) {
+        Err(e) => panic!("Failed to go to target '{}': {}", tgt, e),
+        _ => {},
+    }
+}
+
+fn print_current_dir() {
+    use std::env;
+
+    let to_go = env::current_dir().unwrap();
+    let to_go = to_go.to_str().unwrap();
+    println!("{}", to_go);
+}
+
 fn main() {
     use std::env;
 
@@ -20,13 +41,14 @@ fn main() {
         Err(e) => panic!("Failed to parse options: {}", e),
     };
 
-    // Load configuration
-    let cfg = config::Config::new(env::current_dir().unwrap());
-
-    // Actually go to the target
-    for target in &matches.free {
-        let to_go = cfg.aliases[target].to_str().unwrap();
-        println!("{}", to_go);
-        return;
+    match matches.free.into_iter().next() {
+        Some(target) => {
+            let tgt_path = target.split("/");
+            for tgt_comp in tgt_path {
+                goto_target(tgt_comp);
+            }
+            print_current_dir();
+        },
+        None => {},
     }
 }
