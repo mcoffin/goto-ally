@@ -4,6 +4,19 @@ extern crate yaml_rust as yaml;
 mod config;
 
 use getopts::Options;
+use std::path::PathBuf;
+
+trait Search<V> {
+    fn search<'a, T: AsRef<str>>(&'a self, T) -> Option<&'a V>;
+}
+
+impl Search<PathBuf> for config::Config {
+    fn search<'a, T: AsRef<str>>(&'a self, tgt: T) -> Option<&'a PathBuf> {
+        // TODO: search dir as well as alias map
+        let tgt = tgt.as_ref();
+        Some(&self.aliases[tgt])
+    }
+}
 
 fn options() -> Options {
     let mut opts = Options::new();
@@ -17,7 +30,11 @@ fn goto_target<S: AsRef<str>>(tgt: S) {
 
     let cfg = config::Config::new(env::current_dir().unwrap());
 
-    match env::set_current_dir(&cfg.aliases[tgt]) {
+    let resolved = match cfg.search(tgt) {
+        Some(d) => d,
+        None => panic!("Failed to resolve directory target '{}'", tgt),
+    };
+    match env::set_current_dir(resolved) {
         Err(e) => panic!("Failed to go to target '{}': {}", tgt, e),
         _ => {},
     }
