@@ -12,9 +12,13 @@ trait Search<V> {
 
 impl Search<PathBuf> for config::Config {
     fn search<'a, T: AsRef<str>>(&'a self, tgt: T) -> Option<&'a PathBuf> {
-        // TODO: search dir as well as alias map
         let tgt = tgt.as_ref();
-        Some(&self.aliases[tgt])
+        match self.aliases.get(tgt) {
+            None => {
+                None
+            },
+            Some(found) => Some(found),
+        }
     }
 }
 
