@@ -4,20 +4,34 @@ extern crate yaml_rust as yaml;
 mod config;
 
 use getopts::Options;
+use std::env;
 use std::path::PathBuf;
+use std::fs;
 
 trait Search<V> {
-    fn search<'a, T: AsRef<str>>(&'a self, T) -> Option<&'a V>;
+    fn search<'a, T: AsRef<str>>(&'a self, T) -> Option<V>;
 }
 
 impl Search<PathBuf> for config::Config {
-    fn search<'a, T: AsRef<str>>(&'a self, tgt: T) -> Option<&'a PathBuf> {
+    fn search<'a, T: AsRef<str>>(&'a self, tgt: T) -> Option<PathBuf> {
         let tgt = tgt.as_ref();
         match self.aliases.get(tgt) {
             None => {
+                let current_dir = env::current_dir().unwrap();
+                for entry in fs::read_dir(&current_dir).unwrap() {
+                    match entry {
+                        Ok(ent) => {
+                            let ent = ent.file_name();
+                            if tgt.eq(&ent) {
+                                return Some(PathBuf::from(ent));
+                            }
+                        },
+                        _ => {},
+                    }
+                }
                 None
             },
-            Some(found) => Some(found),
+            Some(found) => Some(found.clone()),
         }
     }
 }
@@ -28,8 +42,6 @@ fn options() -> Options {
 }
 
 fn goto_target<S: AsRef<str>>(tgt: S) {
-    use std::env;
-
     let tgt = tgt.as_ref();
 
     let cfg = config::Config::new(env::current_dir().unwrap());
