@@ -10,3 +10,4 @@ Lightweight configurable bash location alias manager.
 [dependencies]
 getopts = "^0.2"
 yaml-rust = "^0.2"
+effect-monad = "^0.3.1"
